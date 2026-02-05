@@ -65,7 +65,6 @@ export default function ExamClient({ examId }: ExamClientProps) {
   const handleSingleAnswer = (value: string) => {
     if (hasAnswered) return; // Prevent changing answer after submission
     setAnswers(prev => ({ ...prev, [currentIndex]: value }));
-    setAnsweredQuestions(prev => new Set(prev).add(currentIndex));
   };
 
   const handleMultipleAnswer = (value: string) => {
@@ -77,7 +76,7 @@ export default function ExamClient({ examId }: ExamClientProps) {
     setAnswers(prev => ({ ...prev, [currentIndex]: updated }));
   };
 
-  const confirmMultipleAnswer = () => {
+  const confirmAnswer = () => {
     if (answers[currentIndex]) {
       setAnsweredQuestions(prev => new Set(prev).add(currentIndex));
     }
@@ -330,10 +329,10 @@ export default function ExamClient({ examId }: ExamClientProps) {
           })}
         </div>
 
-        {/* Confirm button for multiple choice */}
-        {isMultiple && !hasAnswered && answers[currentIndex] && (
+        {/* Confirm button for all questions */}
+        {!hasAnswered && answers[currentIndex] && (
           <button
-            onClick={confirmMultipleAnswer}
+            onClick={confirmAnswer}
             className="mt-4 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all"
           >
             <span className="material-symbols-outlined">done_all</span>
