@@ -23,7 +23,9 @@ export interface Exam {
 export const QUESTIONS_PER_EXAM = 20;
 
 export function parseCSV(csvText: string): Question[] {
-  const lines = csvText.split('\n');
+  // Normalize line endings and split
+  const normalizedText = csvText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalizedText.split('\n');
   const headers = parseCSVLine(lines[0]);
   const questions: Question[] = [];
 
@@ -32,7 +34,8 @@ export function parseCSV(csvText: string): Question[] {
     if (!line) continue;
     
     const values = parseCSVLine(line);
-    if (values.length < headers.length) continue;
+    // Allow rows even if they have fewer columns (some options might be empty)
+    if (values.length < 3) continue;
 
     const question: Question = {
       Question_Number: parseInt(values[0]) || i,
