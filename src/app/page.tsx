@@ -1,42 +1,10 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { parseCSV, divideIntoExams, Exam } from '@/lib/questions';
+import { divideIntoExams } from '@/lib/questions';
+import { ALL_QUESTIONS } from '@/lib/questionData';
 
 export default function Home() {
-  const [exams, setExams] = useState<Exam[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [totalQuestions, setTotalQuestions] = useState(0);
-
-  useEffect(() => {
-    async function loadQuestions() {
-      try {
-        const response = await fetch('/1Z0-829_questions.csv');
-        const csvText = await response.text();
-        const questions = parseCSV(csvText);
-        const examsList = divideIntoExams(questions);
-        setExams(examsList);
-        setTotalQuestions(questions.length);
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to load questions:', error);
-        setLoading(false);
-      }
-    }
-    loadQuestions();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-[#9c7349]">Loading exams...</p>
-        </div>
-      </div>
-    );
-  }
+  const exams = divideIntoExams(ALL_QUESTIONS);
+  const totalQuestions = ALL_QUESTIONS.length;
 
   return (
     <div className="relative overflow-hidden">

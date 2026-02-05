@@ -1,41 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { parseCSV, divideIntoExams, getOptions, isMultipleChoice, checkAnswer, Question } from '@/lib/questions';
+import { divideIntoExams, getOptions, isMultipleChoice, checkAnswer, Question } from '@/lib/questions';
+import { ALL_QUESTIONS } from '@/lib/questionData';
 
 interface ExamClientProps {
   examId: number;
 }
 
 export default function ExamClient({ examId }: ExamClientProps) {
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const exams = divideIntoExams(ALL_QUESTIONS);
+  const exam = exams.find(e => e.id === examId);
+  const questions = exam?.questions || [];
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string | string[]>>({});
   const [showResults, setShowResults] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [score, setScore] = useState(0);
-
-  useEffect(() => {
-    async function loadQuestions() {
-      try {
-        const response = await fetch('/1Z0-829_questions.csv');
-        const csvText = await response.text();
-        const allQuestions = parseCSV(csvText);
-        const exams = divideIntoExams(allQuestions);
-        const exam = exams.find(e => e.id === examId);
-        
-        if (exam) {
-          setQuestions(exam.questions);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to load questions:', error);
-        setLoading(false);
-      }
-    }
-    loadQuestions();
-  }, [examId]);
 
   const currentQuestion = questions[currentIndex];
   const options = currentQuestion ? getOptions(currentQuestion) : [];
@@ -85,17 +67,6 @@ export default function ExamClient({ examId }: ExamClientProps) {
     setShowResults(false);
     setScore(0);
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-[#9c7349]">Loading exam...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (questions.length === 0) {
     return (
