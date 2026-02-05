@@ -32,29 +32,9 @@ export default function RootLayout({
           </div>
         </nav>
 
-        <main className="pt-20 pb-24">
+        <main className="pt-20 pb-8">
           {children}
         </main>
-
-        {/* Bottom Navigation Bar */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-[#e8dbce] px-8 py-3 flex justify-between items-center pb-6">
-          <a href="/" className="flex flex-col items-center gap-1 text-primary">
-            <span className="material-symbols-outlined">home</span>
-            <span className="text-[10px] font-bold uppercase">Home</span>
-          </a>
-          <div className="flex flex-col items-center gap-1 text-[#9c7349]">
-            <span className="material-symbols-outlined">analytics</span>
-            <span className="text-[10px] font-bold uppercase">Stats</span>
-          </div>
-          <div className="flex flex-col items-center gap-1 text-[#9c7349]">
-            <span className="material-symbols-outlined">book</span>
-            <span className="text-[10px] font-bold uppercase">Courses</span>
-          </div>
-          <div className="flex flex-col items-center gap-1 text-[#9c7349]">
-            <span className="material-symbols-outlined">settings</span>
-            <span className="text-[10px] font-bold uppercase">Settings</span>
-          </div>
-        </div>
       </body>
     </html>
   )
