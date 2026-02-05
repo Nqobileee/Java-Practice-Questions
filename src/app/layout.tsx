@@ -13,6 +13,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="light">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+      </head>
       <body className="bg-background-light font-display text-[#1c140d] min-h-screen selection:bg-primary/30">
         {/* Floating Translucent Top Bar */}
         <nav className="fixed top-0 left-0 right-0 z-50 glass-nav px-4 py-3 flex items-center justify-between">
