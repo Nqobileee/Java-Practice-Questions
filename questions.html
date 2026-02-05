@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Java Exam Practice Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Space+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f27f0d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["Space Mono", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'glow': '0 0 15px -3px rgba(242, 127, 13, 0.5), 0 0 6px -2px rgba(242, 127, 13, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(242, 127, 13, 0.1);
+        }
+        .code-glow {
+            border-left: 3px solid #f27f0d;
+        }
+        .tech-pattern {
+            background-color: #f8f7f5;
+            background-image: radial-gradient(#e8dbce 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+        }
+        .pulsing-glow {
+            box-shadow: 0 0 0 0 rgba(242, 127, 13, 0.7);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(242, 127, 13, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(242, 127, 13, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(242, 127, 13, 0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#1c140d] antialiased">
+<!-- Floating Translucent Top Bar -->
+<nav class="fixed top-0 left-0 right-0 z-50 glass-nav px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">terminal</span>
+<h2 class="text-[#1c140d] text-lg font-bold leading-tight tracking-tight">Java Fundamentals</h2>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1.5 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-sm">timer</span>
+<p class="text-primary text-sm font-bold tracking-wider">14:52</p>
+</div>
+<button class="text-[#9c7349] p-1">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</nav>
+<main class="pt-20 pb-28 px-4 tech-pattern min-h-screen">
+<!-- Progress Bar Section -->
+<div class="flex flex-col gap-2 mb-6">
+<div class="flex justify-between items-end">
+<p class="text-[#1c140d] text-sm font-medium">Question Progress</p>
+<p class="text-primary text-sm font-bold">07 <span class="text-[#9c7349] font-normal">/ 20</span></p>
+</div>
+<div class="h-2 w-full bg-[#e8dbce] rounded-full overflow-hidden shadow-sm">
+<div class="h-full bg-primary shadow-glow transition-all duration-500" style="width: 35%;"></div>
+</div>
+</div>
+<!-- Question Headline -->
+<h3 class="text-[#1c140d] text-xl font-bold leading-snug mb-4">
+            Which of the following is the correct output for this post-increment operation?
+        </h3>
+<!-- Code Block Component -->
+<div class="mb-6 rounded-xl overflow-hidden border border-[#e8dbce] bg-white shadow-sm">
+<div class="bg-[#fcfaf8] border-bottom border-[#e8dbce] px-4 py-2 flex items-center justify-between">
+<div class="flex gap-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-[#e8dbce]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#e8dbce]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#e8dbce]"></div>
+</div>
+<span class="text-[10px] font-mono text-[#9c7349] uppercase tracking-widest">Main.java</span>
+</div>
+<div class="p-5 font-mono text-sm leading-relaxed overflow-x-auto code-glow bg-white">
+<div class="flex gap-4">
+<div class="text-[#9c7349]/50 text-right select-none">
+                        1<br/>2<br/>3<br/>4<br/>5
+                    </div>
+<div class="whitespace-nowrap">
+<span class="text-primary">public class</span> Main {<br/>
+                          <span class="text-primary">public static void</span> main(String[] args) {<br/>
+                            <span class="text-primary">int</span> x = 10;<br/>
+                            System.out.println(x++);<br/>
+                          }<br/>
+                        }
+                    </div>
+</div>
+</div>
+</div>
+<!-- Options List -->
+<div class="flex flex-col gap-3" style="--radio-dot-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(242,128,13)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3ccircle cx=%278%27 cy=%278%27 r=%273%27/%3e%3c/svg%3e');">
+<!-- Option 1: Selected State -->
+<label class="group flex items-center gap-4 rounded-xl border-2 border-primary bg-white p-4 shadow-glow transition-all cursor-pointer">
+<input checked="" class="h-5 w-5 border-2 border-[#e8dbce] bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-primary" name="answer" type="radio"/>
+<div class="flex grow flex-col">
+<p class="text-[#1c140d] text-base font-bold">10</p>
+<p class="text-primary/70 text-xs font-medium">Value is returned before increment</p>
+</div>
+<span class="material-symbols-outlined text-primary opacity-100">check_circle</span>
+</label>
+<!-- Option 2 -->
+<label class="group flex items-center gap-4 rounded-xl border border-[#e8dbce] bg-white p-4 hover:border-primary/50 hover:shadow-sm transition-all cursor-pointer">
+<input class="h-5 w-5 border-2 border-[#e8dbce] bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-primary" name="answer" type="radio"/>
+<div class="flex grow flex-col">
+<p class="text-[#1c140d] text-base font-bold">11</p>
+<p class="text-[#9c7349] text-xs font-normal">Pre-increment result</p>
+</div>
+<span class="material-symbols-outlined text-[#e8dbce] group-hover:text-primary/30 transition-colors">circle</span>
+</label>
+<!-- Option 3 -->
+<label class="group flex items-center gap-4 rounded-xl border border-[#e8dbce] bg-white p-4 hover:border-primary/50 hover:shadow-sm transition-all cursor-pointer">
+<input class="h-5 w-5 border-2 border-[#e8dbce] bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-primary" name="answer" type="radio"/>
+<div class="flex grow flex-col">
+<p class="text-[#1c140d] text-base font-bold">Compilation Error</p>
+<p class="text-[#9c7349] text-xs font-normal">Syntax validation check</p>
+</div>
+<span class="material-symbols-outlined text-[#e8dbce] group-hover:text-primary/30 transition-colors">circle</span>
+</label>
+<!-- Option 4 -->
+<label class="group flex items-center gap-4 rounded-xl border border-[#e8dbce] bg-white p-4 hover:border-primary/50 hover:shadow-sm transition-all cursor-pointer">
+<input class="h-5 w-5 border-2 border-[#e8dbce] bg-transparent text-transparent checked:border-primary checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-primary" name="answer" type="radio"/>
+<div class="flex grow flex-col">
+<p class="text-[#1c140d] text-base font-bold">0</p>
+<p class="text-[#9c7349] text-xs font-normal">Initial memory allocation</p>
+</div>
+<span class="material-symbols-outlined text-[#e8dbce] group-hover:text-primary/30 transition-colors">circle</span>
+</label>
+</div>
+</main>
+<!-- Bottom Action Bar -->
+<footer class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-[#e8dbce] p-4 flex gap-4 items-center">
+<button class="flex-1 flex items-center justify-center gap-2 py-4 px-6 rounded-xl border border-[#e8dbce] text-[#1c140d] font-bold transition-all active:scale-95">
+<span class="material-symbols-outlined">arrow_back</span>
+            Back
+        </button>
+<button class="flex-[2] flex items-center justify-center gap-2 py-4 px-6 rounded-xl bg-primary text-white font-bold pulsing-glow transition-all active:scale-95">
+            Next Question
+            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</footer>
+<!-- Abstract Decorative Background Accents -->
+<div class="fixed top-20 right-[-50px] w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+<div class="fixed bottom-40 left-[-30px] w-48 h-48 bg-primary/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+</body></html>
