@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+:root {
+  --foreground-rgb: 28, 20, 13;
+  --background-start-rgb: 248, 247, 245;
+  --background-end-rgb: 248, 247, 245;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+}
+
+.glass-nav {
+  background: rgba(248, 247, 245, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(242, 127, 13, 0.1);
+}
+
+.glow-button {
+  box-shadow: 0 0 20px rgba(242, 127, 13, 0.4);
+}
+
+.code-bg-pattern {
+  background-image: radial-gradient(#f27f0d 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+  opacity: 0.05;
+}
+
+.tech-pattern {
+  background-color: #f8f7f5;
+  background-image: radial-gradient(#e8dbce 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+}
+
+.code-glow {
+  border-left: 3px solid #f27f0d;
+}
+
+.pulsing-glow {
+  box-shadow: 0 0 0 0 rgba(242, 127, 13, 0.7);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(242, 127, 13, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(242, 127, 13, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(242, 127, 13, 0);
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
