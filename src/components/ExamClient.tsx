@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { divideIntoExams, getOptions, isMultipleChoice, checkAnswer, Question } from '@/lib/questions';
 import { ALL_QUESTIONS } from '@/lib/questionData';
@@ -18,21 +18,69 @@ export default function ExamClient({ examId }: ExamClientProps) {
   const [answers, setAnswers] = useState<Record<number, string | string[]>>({});
   const [showResults, setShowResults] = useState(false);
   const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes in seconds
+  const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
 
   const currentQuestion = questions[currentIndex];
   const options = currentQuestion ? getOptions(currentQuestion) : [];
   const isMultiple = currentQuestion ? isMultipleChoice(currentQuestion) : false;
+  const hasAnswered = answeredQuestions.has(currentIndex);
+
+  const calculateScore = useCallback(() => {
+    let correct = 0;
+    questions.forEach((question, index) => {
+      const userAnswer = answers[index];
+      if (userAnswer && checkAnswer(userAnswer, question.Correct_Answer)) {
+        correct++;
+      }
+    });
+    setScore(correct);
+    setShowResults(true);
+  }, [questions, answers]);
+
+  // Timer effect
+  useEffect(() => {
+    if (showResults || timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          calculateScore();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [showResults, timeLeft, calculateScore]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleSingleAnswer = (value: string) => {
+    if (hasAnswered) return; // Prevent changing answer after submission
     setAnswers(prev => ({ ...prev, [currentIndex]: value }));
+    setAnsweredQuestions(prev => new Set(prev).add(currentIndex));
   };
 
   const handleMultipleAnswer = (value: string) => {
+    if (hasAnswered) return; // Prevent changing answer after submission
     const current = (answers[currentIndex] as string[]) || [];
     const updated = current.includes(value)
       ? current.filter(v => v !== value)
       : [...current, value];
     setAnswers(prev => ({ ...prev, [currentIndex]: updated }));
+  };
+
+  const confirmMultipleAnswer = () => {
+    if (answers[currentIndex]) {
+      setAnsweredQuestions(prev => new Set(prev).add(currentIndex));
+    }
   };
 
   const handleNext = () => {
@@ -49,23 +97,13 @@ export default function ExamClient({ examId }: ExamClientProps) {
     }
   };
 
-  const calculateScore = () => {
-    let correct = 0;
-    questions.forEach((question, index) => {
-      const userAnswer = answers[index];
-      if (userAnswer && checkAnswer(userAnswer, question.Correct_Answer)) {
-        correct++;
-      }
-    });
-    setScore(correct);
-    setShowResults(true);
-  };
-
   const restartExam = () => {
     setCurrentIndex(0);
     setAnswers({});
     setShowResults(false);
     setScore(0);
+    setTimeLeft(30 * 60);
+    setAnsweredQuestions(new Set());
   };
 
   if (questions.length === 0) {
@@ -185,8 +223,19 @@ export default function ExamClient({ examId }: ExamClientProps) {
 
   return (
     <div className="tech-pattern min-h-screen px-4 pb-28">
+      {/* Timer */}
+      <div className="fixed top-16 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#e8dbce] py-2">
+        <div className="max-w-md mx-auto flex items-center justify-center gap-2">
+          <span className={`material-symbols-outlined ${timeLeft <= 300 ? 'text-red-500' : 'text-primary'}`}>timer</span>
+          <span className={`font-mono font-bold text-lg ${timeLeft <= 300 ? 'text-red-500' : 'text-[#1c140d]'}`}>
+            {formatTime(timeLeft)}
+          </span>
+          {timeLeft <= 300 && <span className="text-xs text-red-500 font-medium">Time running out!</span>}
+        </div>
+      </div>
+
       {/* Progress Bar Section */}
-      <div className="max-w-md mx-auto">
+      <div className="max-w-md mx-auto pt-12">
         <div className="flex flex-col gap-2 mb-6">
           <div className="flex justify-between items-end">
             <p className="text-[#1c140d] text-sm font-medium">Exam {examId} Progress</p>
@@ -209,10 +258,10 @@ export default function ExamClient({ examId }: ExamClientProps) {
         </h3>
 
         {/* Multiple Choice Indicator */}
-        {isMultiple && (
+        {isMultiple && !hasAnswered && (
           <div className="mb-4 inline-flex items-center px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
             <span className="material-symbols-outlined text-primary text-sm mr-2">checklist</span>
-            <span className="text-xs font-mono font-bold text-primary">Select multiple answers</span>
+            <span className="text-xs font-mono font-bold text-primary">Select multiple answers, then confirm</span>
           </div>
         )}
 
@@ -222,23 +271,50 @@ export default function ExamClient({ examId }: ExamClientProps) {
             const isSelected = isMultiple
               ? ((answers[currentIndex] as string[]) || []).includes(option.label)
               : answers[currentIndex] === option.label;
+            
+            const correctAnswers = currentQuestion.Correct_Answer.split(',').map(a => a.trim());
+            const isCorrectOption = correctAnswers.includes(option.label);
+            const userAnswer = answers[currentIndex];
+            const isUserCorrect = userAnswer && checkAnswer(userAnswer, currentQuestion.Correct_Answer);
+
+            // Determine styling based on whether question has been answered
+            let borderClass = 'border-[#e8dbce] hover:border-primary/50 hover:shadow-sm';
+            let iconClass = 'text-[#e8dbce] group-hover:text-primary/30';
+            let icon = 'circle';
+
+            if (hasAnswered) {
+              if (isCorrectOption) {
+                borderClass = 'border-green-500 bg-green-50';
+                iconClass = 'text-green-500';
+                icon = 'check_circle';
+              } else if (isSelected && !isCorrectOption) {
+                borderClass = 'border-red-500 bg-red-50';
+                iconClass = 'text-red-500';
+                icon = 'cancel';
+              } else {
+                borderClass = 'border-[#e8dbce] opacity-60';
+              }
+            } else if (isSelected) {
+              borderClass = 'border-primary shadow-glow';
+              iconClass = 'text-primary';
+              icon = 'check_circle';
+            }
 
             return (
               <label
                 key={option.label}
-                className={`group flex items-start gap-4 rounded-xl border-2 bg-white p-4 transition-all cursor-pointer ${
-                  isSelected
-                    ? 'border-primary shadow-glow'
-                    : 'border-[#e8dbce] hover:border-primary/50 hover:shadow-sm'
-                }`}
-                onClick={() =>
-                  isMultiple ? handleMultipleAnswer(option.label) : handleSingleAnswer(option.label)
-                }
+                className={`group flex items-start gap-4 rounded-xl border-2 bg-white p-4 transition-all ${hasAnswered ? 'cursor-default' : 'cursor-pointer'} ${borderClass}`}
+                onClick={() => {
+                  if (!hasAnswered) {
+                    isMultiple ? handleMultipleAnswer(option.label) : handleSingleAnswer(option.label);
+                  }
+                }}
               >
                 <input
                   type={isMultiple ? 'checkbox' : 'radio'}
                   name="answer"
                   checked={isSelected}
+                  disabled={hasAnswered}
                   onChange={() => {}}
                   className="h-5 w-5 mt-0.5 border-2 border-[#e8dbce] text-primary focus:ring-primary"
                 />
@@ -246,17 +322,41 @@ export default function ExamClient({ examId }: ExamClientProps) {
                   <p className="text-[#1c140d] text-base font-bold">{option.label}.</p>
                   <p className="text-[#9c7349] text-sm">{option.value}</p>
                 </div>
-                <span
-                  className={`material-symbols-outlined ${
-                    isSelected ? 'text-primary' : 'text-[#e8dbce] group-hover:text-primary/30'
-                  }`}
-                >
-                  {isSelected ? 'check_circle' : 'circle'}
+                <span className={`material-symbols-outlined ${iconClass}`}>
+                  {icon}
                 </span>
               </label>
             );
           })}
         </div>
+
+        {/* Confirm button for multiple choice */}
+        {isMultiple && !hasAnswered && answers[currentIndex] && (
+          <button
+            onClick={confirmMultipleAnswer}
+            className="mt-4 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all"
+          >
+            <span className="material-symbols-outlined">done_all</span>
+            Confirm Answer
+          </button>
+        )}
+
+        {/* Answer feedback */}
+        {hasAnswered && (
+          <div className={`mt-4 p-4 rounded-xl ${checkAnswer(answers[currentIndex], currentQuestion.Correct_Answer) ? 'bg-green-100 border border-green-300' : 'bg-red-100 border border-red-300'}`}>
+            <div className="flex items-center gap-2 mb-2">
+              <span className={`material-symbols-outlined ${checkAnswer(answers[currentIndex], currentQuestion.Correct_Answer) ? 'text-green-600' : 'text-red-600'}`}>
+                {checkAnswer(answers[currentIndex], currentQuestion.Correct_Answer) ? 'check_circle' : 'cancel'}
+              </span>
+              <p className={`font-bold ${checkAnswer(answers[currentIndex], currentQuestion.Correct_Answer) ? 'text-green-700' : 'text-red-700'}`}>
+                {checkAnswer(answers[currentIndex], currentQuestion.Correct_Answer) ? 'Correct!' : 'Incorrect'}
+              </p>
+            </div>
+            <p className="text-sm text-[#1c140d]">
+              <span className="font-semibold">Correct answer:</span> {currentQuestion.Correct_Answer}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Bottom Action Bar */}
