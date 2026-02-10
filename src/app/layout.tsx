@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Java Practice Questions - OCP 1Z0-829',
-  description: 'Master Java programming with practice exams for the OCP 1Z0-829 certification',
+  title: 'StudyPal - Master Your Subjects',
+  description: 'Practice exams and study materials for Java, Ndebele, and more',
 }
 
 export default function RootLayout({
@@ -23,9 +23,9 @@ export default function RootLayout({
         <nav className="fixed top-0 left-0 right-0 z-50 glass-nav px-4 py-3 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
             <div className="bg-primary p-1.5 rounded-lg flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-[20px]">terminal</span>
+              <span className="material-symbols-outlined text-white text-[20px]">school</span>
             </div>
-            <span className="font-mono font-bold tracking-tight text-lg text-primary">JavaPractice</span>
+            <span className="font-mono font-bold tracking-tight text-lg text-primary">StudyPal</span>
           </a>
           <div className="flex gap-4 items-center">
             <button className="text-[#1c140d] hover:text-primary transition-colors">

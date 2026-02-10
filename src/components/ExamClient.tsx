@@ -7,9 +7,11 @@ import { ALL_QUESTIONS } from '@/lib/questionData';
 
 interface ExamClientProps {
   examId: number;
+  subject?: string;
 }
 
-export default function ExamClient({ examId }: ExamClientProps) {
+export default function ExamClient({ examId, subject = 'java' }: ExamClientProps) {
+  const subjectPath = `/${subject}`;
   const exams = divideIntoExams(ALL_QUESTIONS);
   const exam = exams.find(e => e.id === examId);
   const questions = exam?.questions || [];
@@ -110,7 +112,7 @@ export default function ExamClient({ examId }: ExamClientProps) {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <p className="text-[#9c7349] mb-4">Exam not found</p>
-          <Link href="/" className="text-primary font-bold">Go back home</Link>
+          <Link href={subjectPath} className="text-primary font-bold">Go back to exams</Link>
         </div>
       </div>
     );
@@ -168,11 +170,11 @@ export default function ExamClient({ examId }: ExamClientProps) {
                 Retry Exam
               </button>
               <Link
-                href="/"
+                href={subjectPath}
                 className="w-full border border-[#e8dbce] text-[#1c140d] font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all hover:border-primary"
               >
-                <span className="material-symbols-outlined">home</span>
-                Back to Home
+                <span className="material-symbols-outlined">arrow_back</span>
+                Back to Exams
               </Link>
             </div>
           </div>

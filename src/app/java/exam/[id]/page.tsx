@@ -15,5 +15,5 @@ interface ExamPageProps {
 
 export default function ExamPage({ params }: ExamPageProps) {
   const examId = parseInt(params.id);
-  return <ExamClient examId={examId} />;
+  return <ExamClient examId={examId} subject="java" />;
 }
